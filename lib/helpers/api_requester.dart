@@ -12,4 +12,9 @@ class ApiRequester {
     Uri uri = Uri.https(url, '/api' + path, quaryParameters);
     return await http.get(uri);
   }
+
+  getEpisode(String path, Map<String, dynamic> quaryParameters) async{
+    Uri uri = Uri.https(url, path, quaryParameters);
+    return await http.get(uri);
+  }
 }

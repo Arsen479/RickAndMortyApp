@@ -117,7 +117,7 @@ class _CharacterSearchState extends State<CharacterSearchScreen> {
                                       itemBuilder: (context, index) {
                                         final character =
                                             state.characters[index];
-                                        return characterGridCard(character, state);
+                                        return characterGridCard(character);
                                       },
                                     )
                                   : ListView.builder(
@@ -125,7 +125,7 @@ class _CharacterSearchState extends State<CharacterSearchScreen> {
                                       itemBuilder: (context, index) {
                                         final character =
                                             state.characters[index];
-                                        return characterListCard(character, state);
+                                        return characterListCard(character);
                                       },
                                     ),
                             ),
@@ -155,13 +155,13 @@ class _CharacterSearchState extends State<CharacterSearchScreen> {
     );
   }
 
-  Widget characterListCard(character, state) {
+  Widget characterListCard(character) {
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CharacterDetailsScreen(character: character, state: state,),//character: character),
+            builder: (context) => CharacterDetailsScreen(character: character,),
           ),
         );
       },
@@ -217,12 +217,12 @@ class _CharacterSearchState extends State<CharacterSearchScreen> {
     );
   }
 
-  Widget characterGridCard(character, state) {
+  Widget characterGridCard(character) {
     return InkWell(
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CharacterDetailsScreen(character: character, state: state),//character: character),
+          builder: (context) => CharacterDetailsScreen(character: character),//character: character),
         ),
       ),
       child: Padding(

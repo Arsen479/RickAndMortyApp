@@ -10,7 +10,7 @@ String episodeToJson(Episode data) => json.encode(data.toJson());
 
 class Episode {
     final Info? info;
-    final List<Result>? results;
+    final List<Results>? results;
 
     Episode({
         this.info,
@@ -19,7 +19,7 @@ class Episode {
 
     factory Episode.fromJson(Map<String, dynamic> json) => Episode(
         info: json["info"] == null ? null : Info.fromJson(json["info"]),
-        results: json["results"] == null ? [] : List<Result>.from(json["results"]!.map((x) => Result.fromJson(x))),
+        results: json["results"] == null ? [] : List<Results>.from(json["results"]!.map((x) => Results.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
@@ -56,7 +56,7 @@ class Info {
     };
 }
 
-class Result {
+class Results {
     final int? id;
     final String? name;
     final String? airDate;
@@ -65,7 +65,7 @@ class Result {
     final String? url;
     final DateTime? created;
 
-    Result({
+    Results({
         this.id,
         this.name,
         this.airDate,
@@ -75,7 +75,7 @@ class Result {
         this.created,
     });
 
-    factory Result.fromJson(Map<String, dynamic> json) => Result(
+    factory Results.fromJson(Map<String, dynamic> json) => Results(
         id: json["id"],
         name: json["name"],
         airDate: json["air_date"],

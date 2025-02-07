@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_rick_and_morty/bloc/rick_and_morty_bloc.dart';
+import 'package:flutter_rick_and_morty/bloc_character/rick_and_morty_bloc.dart';
+import 'package:flutter_rick_and_morty/models/character_model.dart';
 import 'package:flutter_rick_and_morty/screens/character_details_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -190,9 +191,10 @@ class _CharacterSearchState extends State<CharacterSearchScreen> {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
-                      color: character.status == 'Alive'
-                          ? Colors.green
-                          : Colors.red,
+                      color: getStatus(character.status!),
+                      // character.status == 'Alive'
+                      //     ? Colors.green
+                      //     : Colors.red,
                     ),
                   ),
                   Text(
@@ -258,4 +260,15 @@ class _CharacterSearchState extends State<CharacterSearchScreen> {
       ),
     );
   }
+}
+
+getStatus(Status status) {
+  if (status == Status.ALIVE) {
+    return Colors.green;
+  } else if (status == Status.DEAD) {
+    return Colors.red;
+  } else {
+    return Colors.grey;
+  }
+  
 }

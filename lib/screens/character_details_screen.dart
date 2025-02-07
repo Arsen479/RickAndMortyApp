@@ -1,6 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_rick_and_morty/bloc/bloc_character_episode/character_episode_bloc.dart';
+import 'package:flutter_rick_and_morty/bloc_character/bloc_character_episode/character_episode_bloc.dart';
 //import 'package:flutter_rick_and_morty/bloc/character_episode_bloc.dart';
 import 'package:flutter_rick_and_morty/models/character_model.dart';
 //import 'package:flutter_rick_and_morty/repository/repository.dart';
@@ -20,7 +22,6 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    //episodeBloc = CharacterEpisodeBloc(repository: Repository());
     print(widget.character.episode);
     print(widget.character.episode.runtimeType);
     episodeBloc = CharacterEpisodeBloc();
@@ -33,21 +34,35 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
     super.dispose();
   }
 
+  getStatus(Status status) {
+  if (status == Status.ALIVE) {
+    return Colors.green;
+  } else if (status == Status.DEAD) {
+    return Colors.red;
+  } else {
+    return Colors.grey;
+  }
+  
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // Верхняя часть с аватаром персонажа
+          // Аватар персонажа
           Container(
             height: 218.h,
             width: 375.w,
             color: Colors.blue,
-            child: Image.network(
-              widget.character.image!,
-              height: 250.h,
-              width: 375.w,
-              fit: BoxFit.cover,
+            child: ImageFiltered(
+              imageFilter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+              child: Image.network(
+                widget.character.image!,
+                height: 250.h,
+                width: 375.w,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Padding(
@@ -56,7 +71,7 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
               height: 170.h,
               width: 170.w,
               decoration: BoxDecoration(
-                color: Colors.blue[200],
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(100.r),
               ),
             ),
@@ -85,17 +100,21 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
               ),
               Text(
                 '${widget.character.status}',
-                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400),
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w400,
+                  color: getStatus(widget.character.status!),
+                ),
               ),
               SizedBox(height: 10.h),
               Container(
                 width: 343.w,
-                height: 80.h,
+                height: 85.h,
                 color: Colors.transparent,
                 child: Text(
                   'Главный протагонист мультсериала «Рик и Морти». Безумный ученый, чей алкоголизм, безрассудность и социопатия заставляют беспокоиться семью его дочери.',
                   style: TextStyle(
-                    fontSize: 18.sp,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
                   ),
                   textAlign: TextAlign.justify,
@@ -117,7 +136,7 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
                         Text(
                           '${widget.character.gender}',
                           style: TextStyle(
-                              fontSize: 18.sp, fontWeight: FontWeight.w400),
+                              fontSize: 14.sp, fontWeight: FontWeight.w400),
                         ),
                       ],
                     ),
@@ -132,7 +151,7 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
                         Text(
                           '${widget.character.species}',
                           style: TextStyle(
-                              fontSize: 18.sp, fontWeight: FontWeight.w400),
+                              fontSize: 14.sp, fontWeight: FontWeight.w400),
                         ),
                       ],
                     ),
@@ -156,7 +175,7 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
                     Text(
                       '${widget.character.origin!.name}',
                       style: TextStyle(
-                          fontSize: 18.sp, fontWeight: FontWeight.w400),
+                          fontSize: 14.sp, fontWeight: FontWeight.w400),
                     ),
                     SizedBox(height: 10.h),
                     const Text(
@@ -166,13 +185,13 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
                     Text(
                       '${widget.character.location!.name}',
                       style: TextStyle(
-                          fontSize: 18.sp, fontWeight: FontWeight.w400),
+                          fontSize: 14.sp, fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 5.h),
-              Text('Эпизоды', style: TextStyle(fontSize: 24.sp)),
+              //SizedBox(height: 5.h),
+              Text('Эпизоды', style: TextStyle(fontSize: 20.sp)),
               // Блок с эпизодами
               Expanded(
                 child: BlocBuilder<CharacterEpisodeBloc, CharacterEpisodeState>(
@@ -199,7 +218,10 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('${episode.episode}'),
+                                    Text(
+                                      '${episode.episode}',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
                                     Container(
                                       width: 250.w,
                                       color: Colors.transparent,
@@ -209,7 +231,10 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
                                         maxLines: 2,
                                       ),
                                     ),
-                                    Text('Дата выхода: ${episode.airDate!}'),
+                                    Text(
+                                      'Дата выхода: ${episode.airDate!}',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
                                   ],
                                 ),
                               ],

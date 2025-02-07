@@ -1,7 +1,7 @@
 //import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_rick_and_morty/bloc/bloc_auth_and_registration/auth_bloc.dart';
+import 'package:flutter_rick_and_morty/bloc_character/bloc_auth_and_registration/auth_bloc.dart';
 //import 'package:flutter_rick_and_morty/screens/auth_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rick_and_morty/bloc_character/bloc_auth_and_registration/auth_bloc.dart';
 import 'package:flutter_rick_and_morty/screens/auth_screen.dart';
 import 'package:flutter_rick_and_morty/screens/character_search_screen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -28,10 +29,16 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Rick and Morty',
-      home: AuthScreen(),
+    return ScreenUtilInit(
+      designSize:const Size(375, 812),
+      minTextAdapt: true,
+      builder: (context, child) {
+        return const MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Rick and Morty',
+          home: AuthScreen(),
+        );
+      },
     );
   }
 }

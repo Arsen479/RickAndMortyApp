@@ -9,8 +9,9 @@ final class LocationLoading extends LocationState {}
 
 final class LocationLoaded extends LocationState {
   final List<ResultLocation> locations;
+  final bool? endPage;
 
-  LocationLoaded(this.locations);
+  LocationLoaded({required this.locations , this.endPage});
 }
 
 final class LocationError extends LocationState {

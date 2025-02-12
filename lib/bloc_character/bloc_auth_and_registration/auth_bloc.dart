@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_rick_and_morty/helpers/pref_keys.dart';
+//import 'package:flutter_rick_and_morty/helpers/pref_keys.dart';
 import 'package:flutter_rick_and_morty/helpers/save_provider.dart';
 import 'package:meta/meta.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';

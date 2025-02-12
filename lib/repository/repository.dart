@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_rick_and_morty/bloc_character/rick_and_morty_bloc.dart';
 import 'package:flutter_rick_and_morty/helpers/api_requester.dart';
 import 'package:flutter_rick_and_morty/models/character_model.dart';
 import 'package:flutter_rick_and_morty/models/episode_model.dart';
@@ -11,6 +12,19 @@ class Repository {
   Future<List<Result>> getAllCharacter(int page) async {
     final response =
         await apiRequester.getCharacter('/character', {'page': '$page'});
+    final data = jsonDecode(response.body);
+
+    if (data == null || data['results'] == null) {
+      throw Exception("Ошибка: API вернул пустые данные");
+    }
+
+    return List<Result>.from(
+        data['results'].map((elem) => Result.fromJson(elem)));
+  }
+
+  Future<List<Result>> getCharacterByName(String name) async {
+    final response =
+        await apiRequester.getCharacter('/character', {'name': name});
     final data = jsonDecode(response.body);
 
     if (data == null || data['results'] == null) {
@@ -39,78 +53,83 @@ class Repository {
     return episodes;
   }
 
+  Future<List<Result>> getCharactersInEpisode(List<String> url) async {
+    List<Result> charactersInEpisode = [];
 
-  Future<Map<String, List<Results>>> getAllEpisodes() async {
-  String? nextPage = '1';
-  //Map<String, List<Results>> allEpisodes = {};
-  Map<String, List<Results>> groupedEpisodes = {};
+    for (var element in url) {
+      Uri uri = Uri.parse(element);
 
-  while (nextPage != null) {
-    final response = await apiRequester.getEpisodePage('/episode', {'page': nextPage});
-    final data = jsonDecode(response.body);
+      final response = await apiRequester.getCharacterInEpisode(uri.path, {});
 
-    if (data == null || data['results'] == null) {
-      throw Exception("Ошибка: API вернул пустые данные");
-    }
-
-    for (var elem in data['results']) {
-      Results episode = Results.fromJson(elem);
-      final String season = episode.episode!.substring(0, 3); // Пример: "S01"
-
-      if (!groupedEpisodes.containsKey(season)) {
-        groupedEpisodes[season] = [];
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        charactersInEpisode.add(Result.fromJson(data));
+      }else{
+        throw Exception('Ошибка загрузки Резидентов локации');
       }
-
-      groupedEpisodes[season]!.add(episode);
     }
-
-    nextPage = data['info']['next']?.replaceFirst('https://rickandmortyapi.com/api/episode?page=', '');
+    return charactersInEpisode;
   }
 
-  return groupedEpisodes;
-}
+  Future<Map<String, List<Results>>> getAllEpisodes() async {
+    String? nextPage = '1';
+    Map<String, List<Results>> groupedEpisodes = {};
 
+    while (nextPage != null) {
+      final response =
+          await apiRequester.getEpisodePage('/episode', {'page': nextPage});
+      final data = jsonDecode(response.body);
 
-  // Future<Map<String, List<Results>>> getAllEpisodes() async {
-  //   final response = await apiRequester.getEpisode('/api/episode', {});
-  //   final data = jsonDecode(response.body);
+      if (data == null || data['results'] == null) {
+        throw Exception("Ошибка: API вернул пустые данные");
+      }
 
-  //   if (data == null || data['results'] == null) {
-  //     throw Exception("Ошибка: API вернул пустые данные");
-  //   }
+      for (var elem in data['results']) {
+        Results episode = Results.fromJson(elem);
+        final String season = episode.episode!.substring(0, 3);
 
-  //   //Преобразование Json в список объектов Results
-  //   List<Results> episodes = List<Results>.from(
-  //     data['results'].map(
-  //       (elem) => Results.fromJson(elem),
-  //     ),
-  //   );
+        if (!groupedEpisodes.containsKey(season)) {
+          groupedEpisodes[season] = [];
+        }
 
-  //   // Группируем по сезонам
-  //   Map<String, List<Results>> groupedEpisodes = {};
+        groupedEpisodes[season]!.add(episode);
+      }
 
-  //   for (var episode in episodes) {
-  //     String season = episode.episode!.substring(0, 3); // "S01E01" → "S01"
+      nextPage = data['info']['next']
+          ?.replaceFirst('https://rickandmortyapi.com/api/episode?page=', '');
+    }
 
-  //     if (!groupedEpisodes.containsKey(season)) {
-  //       groupedEpisodes[season] = [];
-  //     }
+    return groupedEpisodes;
+  }
 
-  //     groupedEpisodes[season]!.add(episode);
-  //   }
-
-  //   return groupedEpisodes;
-  // }
-
-  Future<List<ResultLocation>> getAllLocation() async {
-    final response = await apiRequester.getLocation('/location', {});
+  Future<List<ResultLocation>?> getAllLocation(int page) async {
+    final response =
+        await apiRequester.getLocation('/location', {'page': "$page"});
     final data = jsonDecode(response.body);
 
     if (data == null || data['results'] == null) {
-      throw Exception("Ошибка: API вернул пустые данные");
+      return null;
     }
 
-    return List<ResultLocation>.from(data['results'].map((elem) =>
-        ResultLocation.fromJson(elem))); //ResultLocation.fromJson(data);
+    return List<ResultLocation>.from(
+        data['results'].map((elem) => ResultLocation.fromJson(elem)));
+  }
+
+  Future<List<Result>> getResidentLocation(List<String> url) async {
+    List<Result> residents = [];
+
+    for (var element in url) {
+      Uri uri = Uri.parse(element);
+
+      final response = await apiRequester.getResindentLocation(uri.path, {});
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        residents.add(Result.fromJson(data));
+      }else{
+        throw Exception('Ошибка загрузки Резидентов локации');
+      }
+    }
+    return residents;
   }
 }

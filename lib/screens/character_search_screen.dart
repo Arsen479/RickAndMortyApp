@@ -13,8 +13,8 @@ class CharacterSearchScreen extends StatefulWidget {
 }
 
 class _CharacterSearchState extends State<CharacterSearchScreen> {
-  bool isGridView = false; 
-  bool isLoadingMore = false; 
+  bool isGridView = false;
+  bool isLoadingMore = false;
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +162,9 @@ class _CharacterSearchState extends State<CharacterSearchScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CharacterDetailsScreen(character: character,),
+            builder: (context) => CharacterDetailsScreen(
+              character: character,
+            ),
           ),
         );
       },
@@ -206,10 +208,6 @@ class _CharacterSearchState extends State<CharacterSearchScreen> {
                     '${character.species}, ${character.gender}',
                     style: TextStyle(fontSize: 14.sp, color: Colors.black54),
                   ),
-                  Text(
-                    '${character.origin.name}',
-                    style: TextStyle(fontSize: 14.sp, color: Colors.black54),
-                  ),
                 ],
               ),
             ),
@@ -224,7 +222,8 @@ class _CharacterSearchState extends State<CharacterSearchScreen> {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CharacterDetailsScreen(character: character),//character: character),
+          builder: (context) => CharacterDetailsScreen(
+              character: character), //character: character),
         ),
       ),
       child: Padding(
@@ -270,5 +269,4 @@ getStatus(Status status) {
   } else {
     return Colors.grey;
   }
-  
 }

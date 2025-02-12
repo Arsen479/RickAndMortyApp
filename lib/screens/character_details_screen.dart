@@ -1,11 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rick_and_morty/bloc_character/bloc_character_episode/character_episode_bloc.dart';
-//import 'package:flutter_rick_and_morty/bloc/character_episode_bloc.dart';
 import 'package:flutter_rick_and_morty/models/character_model.dart';
-//import 'package:flutter_rick_and_morty/repository/repository.dart';
+import 'package:flutter_rick_and_morty/screens/episode_detail_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CharacterDetailsScreen extends StatefulWidget {
@@ -35,15 +33,14 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
   }
 
   getStatus(Status status) {
-  if (status == Status.ALIVE) {
-    return Colors.green;
-  } else if (status == Status.DEAD) {
-    return Colors.red;
-  } else {
-    return Colors.grey;
+    if (status == Status.ALIVE) {
+      return Colors.green;
+    } else if (status == Status.DEAD) {
+      return Colors.red;
+    } else {
+      return Colors.grey;
+    }
   }
-  
-}
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +73,7 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
               ),
             ),
           ),
-          // Информация о персонаже
+          // Информация о персе
           Column(
             children: [
               SizedBox(height: 140.h),
@@ -91,11 +88,15 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
                 ),
               ),
               SizedBox(height: 10.h),
-              Text(
-                widget.character.name!,
-                style: TextStyle(
-                  fontSize: 32.sp,
-                  fontWeight: FontWeight.w400,
+              Container(
+                width: 343.w,
+                child: Text(
+                  widget.character.name!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 32.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
               Text(
@@ -204,40 +205,53 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
                         itemCount: state.episodes.length,
                         itemBuilder: (context, index) {
                           final episode = state.episodes[index];
-                          return ListTile(
-                            title: Row(
-                              children: [
-                                Image.asset(
-                                  'assets/Rectangle 11.png',
-                                  height: 74.h,
-                                  width: 74.w,
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EpisodeDetailScreen(
+                                    episode: state.episodes[index],
+                                  ),
                                 ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${episode.episode}',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    Container(
-                                      width: 250.w,
-                                      color: Colors.transparent,
-                                      child: Text(
-                                        episode.name!,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
+                              );
+                            },
+                            child: ListTile(
+                              title: Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/Rectangle 11.png',
+                                    height: 74.h,
+                                    width: 74.w,
+                                  ),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${episode.episode}',
+                                        style: TextStyle(fontSize: 16),
                                       ),
-                                    ),
-                                    Text(
-                                      'Дата выхода: ${episode.airDate!}',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                      Container(
+                                        width: 250.w,
+                                        color: Colors.transparent,
+                                        child: Text(
+                                          episode.name!,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Дата выхода: ${episode.airDate!}',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },

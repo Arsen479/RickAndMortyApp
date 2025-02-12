@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rick_and_morty/screens/character_search_screen.dart';
 import 'package:flutter_rick_and_morty/screens/episode_screen.dart';
 import 'package:flutter_rick_and_morty/screens/location_screen.dart';
+import 'package:flutter_rick_and_morty/screens/setting_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class BottomBarScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     const CharacterSearchScreen(),
     const LocationScreen(),
     const EpisodeScreen(),
+    const SettingsScreen(),
   ];
 
   @override
@@ -35,18 +37,28 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             label: 'Персонажи',
           ),
           BottomNavigationBarItem(
-             icon: SvgPicture.asset('assets/location_24px12.svg'),
-            // Image.asset(
-            //   'assets/location_24px.png',
-            //   height: 20,
-            //   width: 20,
-            //   color: Colors.blue,
-            // ),
+            icon: SvgPicture.asset(
+              'assets/location_24px12.svg',
+              colorFilter: const ColorFilter.mode(
+                Colors.grey,
+                BlendMode.srcIn,
+              ),
+            ),
             label: 'Локации',
           ),
           BottomNavigationBarItem(
-            icon:  Icon(Icons.tv),
+            icon: SvgPicture.asset(
+              'assets/episode.svg',
+              colorFilter: const ColorFilter.mode(
+                Colors.grey,
+                BlendMode.srcIn,
+              ),
+            ),
             label: 'Эпизоды',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/Settings.3.svg'),
+            label: 'Настройки',
           ),
         ],
         currentIndex: selectedIndex,
@@ -56,7 +68,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        iconSize: 20,
+        iconSize: 50,
       ),
     );
   }

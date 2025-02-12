@@ -32,6 +32,19 @@ class RickAndMortyBloc extends Bloc<RickAndMortyEvent, RickAndMortyState> {
       }
     });
 
+    on<GetCharacterByName>((event, emit) async {
+      try {
+        emit(RickAndMortyLoadingState());
+
+        final List<Result> characterModel =
+            await repository.getCharacterByName(event.name);
+
+        emit(RickAndMortyLoadedState(characters: characterModel));
+      } catch (e) {
+        emit(RickAndMortyErrorState(e.toString()));
+      }
+    });
+
     on<GetMoreCharacters>((event, emit) async {
       if (!hasMorePage) return;
 

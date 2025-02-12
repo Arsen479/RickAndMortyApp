@@ -1,3 +1,4 @@
+import 'package:flutter_rick_and_morty/bloc_character/bloc_character_episode/character_episode_bloc.dart';
 import 'package:http/http.dart' as http;
 
 class ApiRequester {
@@ -10,6 +11,16 @@ class ApiRequester {
 
   getLocation(String path, Map<String, dynamic> quaryParameters) async{
     Uri uri = Uri.https(url, '/api' + path, quaryParameters);
+    return await http.get(uri);
+  }
+  
+  getCharacterInEpisode(String path, Map<String, dynamic> quaryParameters) async{
+    Uri uri = Uri.https(url, path, quaryParameters);
+    return await http.get(uri);
+  }
+
+  getResindentLocation(String path, Map<String, dynamic> quaryParameters) async{
+    Uri uri = Uri.https(url, path, quaryParameters);
     return await http.get(uri);
   }
 

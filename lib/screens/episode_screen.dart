@@ -1,46 +1,9 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_rick_and_morty/bloc_character/bloc_all_episode/episode_bloc.dart';
-
-// class EpisodeScreen extends StatefulWidget {
-//   const EpisodeScreen({super.key});
-//   @override
-//   State<EpisodeScreen> createState() => _EpisodeScreenState();
-// }
-
-// class _EpisodeScreenState extends State<EpisodeScreen> {
-//   late final EpisodeBloc episodeBloc;
-
-//   @override
-//   void initState() {
-//     episodeBloc = EpisodeBloc();
-//     super.initState();
-//   }
-
-//   @override
-//   void dispose() {
-//     episodeBloc.close();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('EpisodeScreen'),
-//       ),
-//       body: Column(
-//         children: [
-//           Container(),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rick_and_morty/bloc_character/bloc_all_episode/episode_bloc.dart';
-import 'package:flutter_rick_and_morty/models/episode_model.dart';
+import 'package:flutter_rick_and_morty/screens/episode_detail_screen.dart';
+//import 'package:flutter_rick_and_morty/models/episode_model.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EpisodeScreen extends StatefulWidget {
   const EpisodeScreen({super.key});
@@ -49,27 +12,49 @@ class EpisodeScreen extends StatefulWidget {
   State<EpisodeScreen> createState() => _EpisodeScreenState();
 }
 
-class _EpisodeScreenState extends State<EpisodeScreen> with SingleTickerProviderStateMixin {
+class _EpisodeScreenState extends State<EpisodeScreen>
+    with SingleTickerProviderStateMixin {
   late final EpisodeBloc episodeBloc;
-  late TabController _tabController;
+  TabController? tabController;
 
   @override
   void initState() {
     super.initState();
-    episodeBloc = EpisodeBloc()..add((GetALLEpisode()));
+    episodeBloc = EpisodeBloc()..add(GetALLEpisode());
   }
 
   @override
   void dispose() {
     episodeBloc.close();
-    _tabController.dispose();
+    tabController?.dispose(); // Проверяем, создан ли контроллер
     super.dispose();
+  }
+
+  void updateTabController(int length) {
+    tabController?.dispose(); // Удаляем старый контроллер, если он есть
+    tabController = TabController(length: length, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Эпизоды')),
+      appBar: AppBar(
+        title: TextField(
+          decoration: InputDecoration(
+            hintText: 'Найти персонажа',
+            hintStyle: TextStyle(color: Colors.black54),
+            prefixIcon: Icon(Icons.search, color: Colors.grey),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.r),
+              borderSide: BorderSide.none,
+            ),
+            filled: true,
+            fillColor: Colors.black12,
+          ),
+          style: TextStyle(color: Colors.black),
+          onChanged: (value) {},
+        ),
+      ),
       body: BlocBuilder<EpisodeBloc, EpisodeState>(
         bloc: episodeBloc,
         builder: (context, state) {
@@ -77,33 +62,48 @@ class _EpisodeScreenState extends State<EpisodeScreen> with SingleTickerProvider
             return const Center(child: CircularProgressIndicator());
           } else if (state is EpisodeLoaded) {
             final seasons = state.episodes.keys.toList();
-            _tabController = TabController(length: seasons.length, vsync: this);
+
+            if (tabController == null ||
+                tabController!.length != seasons.length) {
+              updateTabController(seasons.length);
+            }
 
             return Column(
               children: [
-                // TabBar для сезонов
                 TabBar(
-                  controller: _tabController,
+                  controller: tabController,
                   isScrollable: true,
                   labelColor: Colors.black,
                   indicatorColor: Colors.blue,
-                  tabs: seasons.map((season) => Tab(text: "Сезон ${season.substring(1)}")).toList(),
+                  tabs: seasons
+                      .map(
+                          (season) => Tab(text: "Сезон ${season.substring(2)}"))
+                      .toList(),
                 ),
-
-                // TabBarView с эпизодами
                 Expanded(
                   child: TabBarView(
-                    controller: _tabController,
+                    controller: tabController,
                     children: seasons.map((season) {
                       final episodes = state.episodes[season]!;
                       return ListView.builder(
                         itemCount: episodes.length,
                         itemBuilder: (context, index) {
                           final episode = episodes[index];
-                          return ListTile(
-                            title: Text(episode.name!),
-                            subtitle: Text(episode.airDate!),
-                            leading: CircleAvatar(child: Text(episode.episode!.split('E')[1])),
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      EpisodeDetailScreen(episode: episode),
+                                ),
+                              );
+                            },
+                            child: ListTile(
+                              title: Text(episode.name!),
+                              subtitle: Text(episode.airDate!),
+                              leading: Text(episode.episode!.split('E')[1]),
+                            ),
                           );
                         },
                       );
